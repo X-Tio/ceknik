@@ -1,7 +1,8 @@
 const axios = require('axios');
 
-module.exports = async (req, res) => {
+module.exports = async function handler(req, res) {
   const { nik } = req.query;
+
   if (!nik) {
     return res.status(400).json({ error: 'nik is required' });
   }
@@ -41,8 +42,7 @@ module.exports = async (req, res) => {
         metode
       }
     }
-  }
-  `;
+  }`;
 
   try {
     const response = await axios.post(
@@ -50,22 +50,15 @@ module.exports = async (req, res) => {
       { query },
       {
         headers: {
-          'Accept': 'application/json, text/plain, */*',
-          'Accept-Language': 'ms-MY,ms;q=0.9,en-US;q=0.8,en;q=0.7',
-          'Connection': 'keep-alive',
-          'Content-Type': 'application/json;charset=UTF-8',
+          'Content-Type': 'application/json',
           'Origin': 'https://cekdptonline.kpu.go.id',
           'Referer': 'https://cekdptonline.kpu.go.id/',
-          'User-Agent': 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Mobile Safari/537.36',
-          'X-Forwarded-For': '182.1.237.187',
-          'Client-IP': '182.1.237.187',
-          'X-Real-IP': '182.1.237.187'
+          'User-Agent': 'Mozilla/5.0'
         }
       }
     );
-
     res.status(200).json(response.data);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch', detail: error.message });
+  } catch (err) {
+    res.status(500).json({ error: 'Fetch failed', message: err.message });
   }
 };
