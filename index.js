@@ -1,11 +1,10 @@
-const express = require('express');
 const axios = require('axios');
-const app = express();
-const port = 3000;
 
-app.get('/api/ceknik', async (req, res) => {
+module.exports = async (req, res) => {
   const { nik } = req.query;
-  if (!nik) return res.status(400).json({ error: 'nik is required' });
+  if (!nik) {
+    return res.status(400).json({ error: 'nik is required' });
+  }
 
   const query = `
   {
@@ -64,12 +63,9 @@ app.get('/api/ceknik', async (req, res) => {
         }
       }
     );
-    res.json(response.data);
-  } catch (err) {
-    res.status(500).json({ error: 'Request failed', detail: err.message });
-  }
-});
 
-app.listen(port, () => {
-  console.log(`API running on http://localhost:${port}`);
-});
+    res.status(200).json(response.data);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch', detail: error.message });
+  }
+};
